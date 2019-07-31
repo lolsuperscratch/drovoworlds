@@ -1,0 +1,10 @@
+{
+  "name": "drovoworlds",
+  "dependencies": {
+    "express":"*",
+    "socket.io":"*"
+  },
+  "scripts": {
+    "start":"node server.js"
+  }
+}
