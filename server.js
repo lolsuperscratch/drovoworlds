@@ -12,37 +12,12 @@ function generateMap(size) {
   }
   return generated;
 }
-app.get('/tile/:x/:y',function (req,res) {
-  // canvas
+app.get('/map/:x/:y',function (req,res) {
+  // not working canvas (should be used on generated map instead.)
   if (!worlds[req.params.x+','+req.params.y]) {
     worlds[req.params.x+','+req.params.y] = generateMap(500);
   }
-  var curworld = worlds[req.params.x+','+req.params.y];
-  var canvas = new createCanvas(300,300);
-  var ctx = canvas.getContext('2d');
-  var tilex = 0,tiley = 0;
-  for (var i = 0;i < curworld;i++) {
-    var curtile = curworld[i];
-    if (curtile == 0) {
-      ctx.fillStyle = 'green';
-      ctx.fillRect(tilex,tiley,32,32)
-    }
-    if (curtile == 1) {
-      ctx.fillStyle = 'yellow';
-      ctx.fillRect(tilex,tiley,32,32)
-    }
-    if (curtile == 2) {
-      ctx.fillStyle = 'blue';
-      ctx.fillRect(tilex,tiley,32,32)
-    }
-    tilex += 32;
-    if (tilex >= 300) {
-      tiley += 32;
-      tilex = 0;
-    }
-  }
-  var out = fs.writeFileSync(__dirname + '/map.png',canvas.toBuffer('image/png'));
-  res.sendFile(__dirname + '/map.png')
+  res.send(worlds[req.params.x+','+req.params.y])
 });
 app.get('/images/player',function (req,res) {
   res.sendFile(__dirname + '/DrovoWorlds Character.png')
@@ -146,6 +121,6 @@ io.on('connection',function (socket) {
     self.inputs[key] = false;
   })
   socket.on('chat',function (msg) {
-    sendroom(self.room,'chat',[self.name,msg])
+    sendroom(self.room,'chat',self.name,msg)
   })
 })
