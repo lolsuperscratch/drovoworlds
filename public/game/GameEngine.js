@@ -39,7 +39,7 @@ GameEngine.prototype.render = function () {
     
     // we recommend to put the names below of player.
     ctx.font = '5px Arial';
-ctx.fillText(self.name, self.x, self.y+20);
+ctx.fillText(self.name, self.x, self.y+34);
   }
   // 3. next frame after rendering
   this.frame += 1;
