@@ -2,7 +2,8 @@
   "name": "drovoworlds",
   "dependencies": {
     "express":"*",
-    "socket.io":"*"
+    "socket.io":"*",
+    "canvas":"*"
   },
   "scripts": {
     "start":"node server.js"
