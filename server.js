@@ -55,6 +55,15 @@ function playerList(room) {
   }
   return plr;
 }
+function playerCount(room) {
+  var count = 0;
+  for (var p in players) {
+    if (players[p].room == room) {
+      count += 1;
+    }
+  }
+  return count;
+}
 function playerTick(self) {
   if (self.inputs.ArrowUp) {
     self.y -= 20;
@@ -132,7 +141,7 @@ mapworld.on('connection',function (socket) {
     if (!worlds[worldx+','+worldy]) {
     worlds[worldx+','+worldy] = generateMap(500);
   }
-    socket.emit('map',worlds[worldx+','+worldy])
+    socket.emit('map',worlds[worldx+','+worldy],playerCount(worldx+','+worldy))
     worldx += 1;
   if (worldx > 9) {
     worldx = 0;
