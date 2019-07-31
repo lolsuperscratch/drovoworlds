@@ -1,6 +1,6 @@
 var express = require('express');
 var ioServer = require('socket.io');
-var Canvas = require('canvas');
+var {createCanvas, loadImage} = require('canvas');
 var fs = require('fs');
 var app = express();
 app.use(express.static('public'));
@@ -14,19 +14,43 @@ function generateMap(size) {
 }
 app.get('/tile/:x/:y',function (req,res) {
   // canvas
-  if (!worlds[req.params.x+req.params.y]) {
-    worlds[req.params.x+req.params.y] = generateMap(500);
+  if (!worlds[req.params.x+','+req.params.y]) {
+    worlds[req.params.x+','+req.params.y] = generateMap(500);
   }
-  var curworld = worlds[req.params.x+req.params.y];
-  var canvas = new Canvas(300,300);
+  var curworld = worlds[req.params.x+','+req.params.y];
+  var canvas = new createCanvas(300,300);
   var ctx = canvas.getContext('2d');
+  var tilex = 0,tiley = 0;
   for (var i = 0;i < curworld;i++) {
-  
+    var curtile = curworld[i];
+    if (curtile == 0) {
+      ctx.fillStyle = 'green';
+      ctx.fillRect(tilex,tiley,32,32)
+    }
+    if (curtile == 1) {
+      ctx.fillStyle = 'yellow';
+      ctx.fillRect(tilex,tiley,32,32)
+    }
+    if (curtile == 2) {
+      ctx.fillStyle = 'blue';
+      ctx.fillRect(tilex,tiley,32,32)
+    }
+    tilex += 32;
+    if (tilex >= 300) {
+      tiley += 32;
+      tilex = 0;
+    }
   }
-  var out = fs.createWriteStream(__dirname + '/map.png');
-  var stream = canvas.createPNGStream();
+  var out = fs.writeFileSync(__dirname + '/map.png',canvas.toBuffer('image/png'));
+  res.sendFile(__dirname + '/map.png')
 });
-var serv = app.listen(3000);
+app.get('/images/player',function (req,res) {
+  res.sendFile(__dirname + '/DrovoWorlds Character.png')
+})
+app.get('/images/tiles',function (req,res) {
+  res.sendFile(__dirname + '/DrovoWorlds Tiles.png')
+})
+var serv = app.listen(process.env.PORT || 2000);
 var io = ioServer(serv);
 var players = {};
 var player = function (id) {
@@ -93,17 +117,26 @@ io.on('connection',function (socket) {
       socket.emit('map',worlds[room])
     }
     self.room = room;
+    self.name = name || "Player";
     gameTickinterval = setInterval(function () {
       playerTick(self)
       socket.emit('tick',playerList(self.room))
     },1000);
   });
   socket.on('leave',function () {
+    if (gameTickinterval) {
     clearInterval(gameTickinterval);
+    gameTickinterval = undefined;
+    }
     self.room = 0;
     socket.emit('doneleave');
   })
   socket.on('disconnect',function () {
+    if (gameTickinterval) {
+       clearInterval(gameTickinterval)
+       gameTickinterval = undefined;
+    }
+    
     delete players[socket.id];
   })
   socket.on('keydown',function (key) {
