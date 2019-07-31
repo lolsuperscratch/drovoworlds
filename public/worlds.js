@@ -7,7 +7,7 @@ for (var i = 0;i < 90;i++) {
   xhr.open("GET",`/map/${worldx}/${worldy}`,true)
   xhr.onreadystatechange = function () {
   if(xhr.readyState === 4 && xhr.status === 200) {
-    world.render(xhr.responseText)
+    world.render(JSON.parse(xhr.responseText))
   }
 };
 xhr.send();
