@@ -20,4 +20,9 @@ var world = new MapRenderer(document.getElementById(`world${worldx}-${worldy}`))
   }
   }
 xhr.send();
+  worldx += 1;
+  if (worldx > 9) {
+    worldx = 0;
+    worldy += 1;
+  } 
 }
