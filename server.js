@@ -1,5 +1,7 @@
 var express = require('express');
 var ioServer = require('socket.io');
+var Canvas = require('canvas');
+var fs = require('fs');
 var app = express();
 app.use(express.static('public'));
 var worlds = {};
@@ -15,7 +17,14 @@ app.get('/tile/:x/:y',function (req,res) {
   if (!worlds[req.params.x+req.params.y]) {
     worlds[req.params.x+req.params.y] = generateMap(500);
   }
-  req.send(req.params.x+req.params.y);
+  var curworld = worlds[req.params.x+req.params.y];
+  var canvas = new Canvas(300,300);
+  var ctx = canvas.getContext('2d');
+  for (var i = 0;i < curworld;i++) {
+  
+  }
+  var out = fs.createWriteStream(__dirname + '/map.png');
+  var stream = canvas.createPNGStream();
 });
 var serv = app.listen(3000);
 var io = ioServer(serv);
