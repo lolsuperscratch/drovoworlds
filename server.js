@@ -82,22 +82,22 @@ function playerList(room) {
 }
 function playerTick(self) {
   if (self.inputs.ArrowUp) {
-    self.y += 1;
+    self.y -= 20;
     self.animation = 2;
     self.walking = true;
   }
   else if (self.inputs.ArrowDown) {
-    self.y -= 1;
+    self.y += 20;
     self.animation = 3;
     self.walking = true;
   }
   else if (self.inputs.ArrowLeft) {
-    self.x -= 1;
+    self.x -= 20;
     self.animation = 1;
     self.walking = true;
   }
   else if (self.inputs.ArrowRight) {
-    self.x += 1;
+    self.x += 20;
     self.animation = 0;
     self.walking = true;
   }
