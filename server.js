@@ -124,3 +124,19 @@ io.on('connection',function (socket) {
     sendroom(self.room,'chat',self.name,msg)
   })
 })
+var mapworld = io.of('/maps')
+mapworld.on('connection',function (socket) {
+  var worldx=0,worldy=0
+  for (var i = 0;i < 90;i++) {
+    
+    if (!worlds[worldx+','+worldy]) {
+    worlds[worldx+','+worldy] = generateMap(500);
+  }
+    socket.emit('map',worlds[worldx+','+worldy])
+    worldx += 1;
+  if (worldx > 9) {
+    worldx = 0;
+    worldy += 1;
+  } 
+  }
+})
