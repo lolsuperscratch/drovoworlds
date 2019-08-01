@@ -156,4 +156,7 @@ mapworld.on('connection',function (socket) {
   maptick = setInterval(function () {
     loadMap();
   },10000)
+  socket.on('disconnect',function () {
+    clearInterval(maptick);
+  })
 })
