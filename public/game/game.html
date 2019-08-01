@@ -2,11 +2,27 @@
   <head>
     <title>Play DrovoWorlds</title>
   </head>
-  <body>
-    <canvas width="300" height="300" id="game" style="margin:center;">Your browser does not support canvas to play the game.<br>Supported Browsers are:<br>Chrome<br>Firefox<br>and many browsers that supports canvas.</canvas>
+  <body style="background:linear-gradient(45deg, black, green);color:white;">
+    <canvas width="300" height="300" id="game" style="position:absolute;top:34vw;left:20vh;">Your browser does not support canvas to play the game.<br>Supported Browsers are:<br>Chrome<br>Firefox<br>and many browsers that supports canvas.</canvas>
+    <div id="chat"><div id="messages" style="position:absolute;left:2px;color:white;height:100px;width:200px;"></div><br><div id="chatsay" style="position:absolute;top:70vh;"><input id="chatinput" type="text" placeholder="Say Something..."><button id="chatsend" style="color:black;">SEND</button></div></div>
     <script src="/jquery-3.4.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="GameEngine.js"></script>
     <script src="game.js"></script>
+    <script>
+      game.socket.on('chat',function (args) {
+        $('#messages').append(`<b>${args[0]}:</b> ${args[1]}`);
+      })
+      $('#chatsend').click(function () {
+        game.socket.emit('chat',$('#chatinput').val());
+        $('#chatinput').val('');
+      })
+      $('#chatinput').on('keypress',function (e) {
+        if (e.key == "Enter") {
+        game.socket.emit('chat',$('#chatinput').val());
+        $('#chatinput').val('');
+        }
+      })
+    </script>
   </body>
 </html>
