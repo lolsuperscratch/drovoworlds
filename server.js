@@ -135,17 +135,25 @@ io.on('connection',function (socket) {
 })
 var mapworld = io.of('/maps')
 mapworld.on('connection',function (socket) {
+  var loadMap = function () {
+    socket.emit('clearall')
   var worldx=0,worldy=0
+  var maptick = undefined;
   for (var i = 0;i < 90;i++) {
     
     if (!worlds[worldx+','+worldy]) {
     worlds[worldx+','+worldy] = generateMap(500);
   }
-    socket.emit('map',worlds[worldx+','+worldy],playerCount(worldx+','+worldy))
+    socket.emit('map',worlds[worldx+','+worldy],playerCount(worldx+','+worldy),playerList(worldx+','+worldy))
     worldx += 1;
   if (worldx > 9) {
     worldx = 0;
     worldy += 1;
   } 
   }
+  }
+  
+  maptick = setInterval(function () {
+    loadMap();
+  },5000)
 })
