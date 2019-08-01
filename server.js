@@ -106,21 +106,24 @@ io.on('connection',function (socket) {
       playerTick(self)
       socket.emit('tick',playerList(self.room))
     },1000);
+    sendroom(room,'chat','server',name+' joined!')
   });
   socket.on('leave',function () {
     if (gameTickinterval) {
     clearInterval(gameTickinterval);
     gameTickinterval = undefined;
     }
-    self.room = 0;
+    
     socket.emit('doneleave');
+    sendroom(self.room,'chat','server',self.name+' left.')
+    self.room = 0;
   })
   socket.on('disconnect',function () {
     if (gameTickinterval) {
        clearInterval(gameTickinterval)
        gameTickinterval = undefined;
     }
-    
+    sendroom(self.room,'chat','server',self.name+' left.')
     delete players[socket.id];
   })
   socket.on('keydown',function (key) {
