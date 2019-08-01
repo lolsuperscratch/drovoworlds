@@ -11,7 +11,8 @@
     <script src="game.js"></script>
     <script>
       game.socket.on('chat',function (args) {
-        $('#messages').append(`<b>${args[0]}:</b> ${args[1]}`);
+        $('#messages').append(`<b>${args[0]}:</b> ${args[1]}<br>`);
+        $("#messages").scrollTop($("#messages")[0].scrollHeight);
       })
       $('#chatsend').click(function () {
         game.socket.emit('chat',$('#chatinput').val());
