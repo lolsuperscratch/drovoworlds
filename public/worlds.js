@@ -16,6 +16,7 @@ socket.on('map',function (map,online,players) {
 })
 socket.on('clearall',function () {
   $('#worlds > a').remove();
+  worldx = 0,worldy = 0;
 })
   
   
