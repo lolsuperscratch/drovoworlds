@@ -152,8 +152,8 @@ mapworld.on('connection',function (socket) {
   } 
   }
   }
-  
+  loadMap();
   maptick = setInterval(function () {
     loadMap();
-  },5000)
+  },10000)
 })
